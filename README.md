@@ -2,7 +2,7 @@
 
 My config files for the [Slate window manager](https://github.com/jigish/slate)
 
-Currently focused on aligning windows to a 10x10 (a la [Divvy](http://mizage.com/divvy/)), with capability to manipulate many windows with one hotkey / when display(s) configuration changes.
+Currently focused on aligning windows to a 10x10 grid (a la [Divvy](http://mizage.com/divvy/)), with capability to manipulate many windows with one hotkey / when display(s) configuration changes.
 
 ## Installing
 
