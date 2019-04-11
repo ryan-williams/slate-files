@@ -1,70 +1,152 @@
 
 // My laptop screen.
 var laptop = new Screen('1440x900');
+//var wlaptop = new Screen('1280x800');
+var wlaptop = new Screen('1680x1050');
 
-// My apple monitor at work.
-var apple = new Screen('2560x1440');
+// My large dell monitor at home.
+var dell = new Screen('2560x1080');
 
-// My dell monitor at home.
-var dell = new Screen('1920x1080');
+// Large LG curved 34" monitor at chez williams
+var cw = new Screen('3440x1440');
 
-var bindings = {};
+// Horizontal dell monitor at work.
+var wd = new Screen('2560x1440');
+
+// Vertical dell monitor at work.
+var vwd = new Screen('1440x2560');
+
+var bindings = {
+  "right:ctrl": S.op("resize", { "width" : "+10%", "height" : "+0" }),
+   "left:ctrl": S.op("resize", { "width" : "-10%", "height" : "+0" }),
+  "right:ctrl,shift": function(w) { 
+    w.doOperation(
+      S.op(
+        "move", {
+          "width" : "windowSizeX-screenSizeX/10", 
+          height: "windowSizeY", 
+          "x": "windowTopLeftX+screenSizeX/10",
+          y: "windowTopLeftY"
+        }
+      )
+    )
+  },
+   "left:ctrl,shift": function(w) { 
+    w.doOperation(
+      S.op(
+        "move", {
+          "width" : "windowSizeX+screenSizeX/10", 
+          height: "windowSizeY", 
+          "x": "windowTopLeftX-screenSizeX/10",
+          y: "windowTopLeftY"
+        }
+      )
+    )
+  },
+   //"left:ctrl,shift": S.op("move", { "width" : "+10%", "x": "-10%", "height" : "+0%" }),
+  // "right:ctrl": S.op("resize", { "width" : "windowSizeX+screenSizeX/10", "height" : "+0" }),
+  //  "left:ctrl": S.op("resize", { "width" : "windowSizeX-screenSizeX/10", "height" : "+0" }),
+  // "right:ctrl,shift": S.op("resize", { "width" : "windowSizeX-screenSizeX/10", "height" : "+0%", "anchor": "bottom-right" }),
+  //  "left:ctrl,shift": S.op("resize", { "width" : "windowSizeX+screenSizeX/10", "height" : "+0%", "anchor": "bottom-right" }),
+  "h:alt": S.op("hint"),
+  "0:alt": grid(),
+  "d:alt,shift": S.op("relaunch")
+  ,"d:alt": function() { S.source("/Users/ryan/.slate.js"); }
+};
 
 // Alt-d: reload this Slate config.
-bindings["d:alt"] = function() { S.source("/Users/ryan/.slate.js"); };
-
+// bindings["d:alt"] = function() { S.source("/Users/ryan/.slate.js"); };
 
 // {Alt+N, Alt+Shift+N}: {left,right}-most N columns
 for (var n = 1; n < 10; ++n) {
-  bindings[n + ":alt"] = left(n);
-  bindings[n + ":alt;shift"] = right(n);
+  bindings[n + ":alt;shift"] = left(n);
+  bindings[n + ":alt"] = right(n);
 }
 // Alt+0: full screen
-bindings["0:alt"] = grid();
+// bindings["0:alt"] = grid();˙
 
-
-// Organize windows on laptop + apple-monitor.
-var office2Monitors = S.layout("office-2monitors", {
-  "Google Chrome": apple.grid(1, 7),
-  "iTerm": apple.left(5),
-  "IntelliJ IDEA": apple.right(6),
-  "Emacs": apple.right(6),
-  "NetBeans": apple.right(6),
-  "GitX": apple.right(5),
-  "HipChat": laptop.grid(),
-  "Slack": laptop.grid()
+// Organize windows on laptop + wd-monitor.
+var office3Monitors = S.layout("office-3monitors", {
+  "Google Chrome": wd.grid(1, 7),
+  "iTerm2": vwd.grid(),
+  "IntelliJ IDEA": wd.right(6),
+  "IntelliJ IDEA-EAP": wd.right(6),
+  "WebStorm": wd.right(6),
+  "Eclipse": wd.right(6),
+  "Emacs": wd.right(6),
+  "NetBeans": wd.right(6),
+  "GitX": wd.right(5),
+  "Gitter": wd.right(7),
+  "Slack": wd.right(7),
+  "Msngr": wd.right(7),
+  "Signal": wd.right(7),
+  "Sunrise Calendar": wlaptop.right(8),
+  "Snippets": wd.right(5),
+  "Cluster": wd.right(6),
+  "Sublime Text 2": wd.right(6),
+  "Sublime Text": wd.right(6),
+  "Safari": wd.right(6),
+  "GCal": wd.right(6)
 });
-S.default([ laptop.id, apple.id ], office2Monitors);
-bindings["m:ctrl;cmd"] = S.op("layout", { name: office2Monitors });
 
+// S.default([ wlaptop.id, wd.id, vwd.id ], office3Monitors);
+// bindings["m:ctrl;cmd"] = S.op("layout", { name: office3Monitors });
 
 // Organize windows on laptop.
-var laptop1Monitor = S.layout("laptop-1monitor", {
-  "Google Chrome": laptop.grid(),
-  "iTerm": laptop.grid(),
-  "IntelliJ IDEA": laptop.grid(),
-  "NetBeans": laptop.grid(),
-  "Emacs": laptop.grid(),
-  "GitX": laptop.grid(),
-  "HipChat": laptop.grid(),
-  "Slack": laptop.grid()
-});
-S.default([ laptop.id ], laptop1Monitor);
+var laptop1Monitor = (function(l) { return S.layout("laptop-1monitor", {
+  "Google Chrome": l.right(9),
+  "iTerm2": l.grid(),
+  "IntelliJ IDEA": l.right(9),
+  "IntelliJ IDEA-EAP": l.right(9),
+  "WebStorm": l.grid(),
+  "Eclipse": l.grid(),
+  "NetBeans": l.grid(),
+  "Emacs": l.grid(),
+  "GitX": l.grid(),
+  "Slack": l.right(9),
+  "Msngr": l.right(9),
+  "Signal": l.right(9),
+  "Sunrise Calendar": l.right(9),
+  "Snippets": l.right(9),
+  "Sublime Text 2": l.right(9),
+  "Sublime Text": l.right(9),
+  "Safari": l.right(9)
+}) })(wlaptop);
+S.default([ wlaptop.id ], laptop1Monitor);
 bindings["l:ctrl;cmd"] = S.op("layout", { name: laptop1Monitor });
 
+function two(name, l, r) {
+  return S.layout(name, {
+    "Google Chrome": l.grid(2, 8),
+    "iTerm2": l.left(6),
+    "IntelliJ IDEA": l.right(6),
+    "IntelliJ IDEA-EAP": l.right(6),
+    "WebStorm": l.right(5),
+    "Eclipse": l.right(5),
+    "NetBeans": l.right(8),
+    "Emacs": l.right(7),
+    "Msngr": l.right(6),
+    "GitX": l.right(8),
+    "Slack": l.right(6),
+    "Gitter": l.right(6),
+    "Sunrise Calendar": r.right(8),
+    "Snippets": l.right(6),
+    "Cluster": l.right(5, 10),
+    "Sublime Text 2": l.right(6),
+    "Sublime Text": l.right(6),
+    "Safari": l.right(6),
+    "GCal": l.right(6),
+    "Signal": r.grid(),
+  });
+}
+var home2Monitors = two("home-2monitors", dell, laptop);
+var office2Monitors = two("office-2monitors", wd, laptop);
 
-var home2Monitors = S.layout("home-2monitors", {
-  "Google Chrome": dell.grid(1, 8),
-  "iTerm": dell.left(7),
-  "IntelliJ IDEA": dell.right(8),
-  "NetBeans": dell.right(8),
-  "Emacs": dell.right(8),
-  "GitX": dell.right(8),
-  "HipChat": laptop.grid(),
-  "Slack": laptop.grid()
-});
 S.default([ laptop.id, dell.id ], home2Monitors);
 bindings["n:ctrl;cmd"] = S.op("layout", { name: home2Monitors });
+
+S.default([ laptop.id, wd.id ], office2Monitors);
+bindings["m:ctrl;cmd"] = S.op("layout", { name: office2Monitors });
 
 
 // Bind all hotkeys.
