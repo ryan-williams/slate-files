@@ -16,42 +16,146 @@ var wd = new Screen('2560x1440');
 // Vertical dell monitor at work.
 var vwd = new Screen('1440x2560');
 
+var  widenRight = S.op("resize", { "width" : "+10%", "height" : "+0" });
+var narrowRight = S.op("resize", { "width" : "-10%", "height" : "+0" });
+function widenLeft(w) {
+  w.doOperation(
+        S.op(
+              "move", {
+                "width" : "windowSizeX+screenSizeX/10",
+                height: "windowSizeY",
+                "x": "windowTopLeftX-screenSizeX/10",
+                y: "windowTopLeftY"
+              }
+        )
+  )
+}
+function narrowLeft(w) {
+  w.doOperation(
+        S.op(
+              "move", {
+                "width" : "windowSizeX-screenSizeX/10",
+                height: "windowSizeY",
+                "x": "windowTopLeftX+screenSizeX/10",
+                y: "windowTopLeftY"
+              }
+        )
+  )
+}
+
+var pushBottom = S.op("resize", { "width" : "+0", "height" : "+10%" });
+var pullBottom = S.op("resize", { "width" : "+0", "height" : "-10%" });
+
+function pullTop(w) {
+  w.doOperation(
+        S.op(
+              "move", {
+                "width" : "windowSizeX",
+                x: "windowTopLeftX",
+                height: "windowSizeY-screenSizeY/10",
+                "y": "windowTopLeftY+screenSizeY/10",
+              }
+        )
+  )
+}
+
+function pushTop(w) {
+  w.doOperation(
+        S.op(
+              "move", {
+                "width" : "windowSizeX",
+                x: "windowTopLeftX",
+                height: "windowSizeY+screenSizeY/10",
+                "y": "windowTopLeftY-screenSizeY/10",
+              }
+        )
+  )
+}
+
+var throwTop =
+      // S.op(
+      //       "resize", {
+      //         "anchor": "bottom-left",
+      //         "height": "+10%",
+      //         "width": "+0",
+      //       }
+      // );
+S.op(
+      "move", {
+        "width" : "windowSizeX",
+        x: "windowTopLeftX",
+        height: "windowTopLeftY+windowSizeY",
+        "y": "screenOriginY",
+        //"screen": w,
+      }
+);
+
+// function throwTop(w) {
+//   return (
+//   //w.doOperation(
+//         S.op(
+//               "resize", {
+//                 "anchor": "bottom-left",
+//                 "height": "+10%",
+//                 "width": "+0",
+//               }
+//         )
+//         // S.op(
+//         //       "move", {
+//         //         "width" : "windowSizeX",
+//         //         x: "windowTopLeftX",
+//         //         height: "screenSizeY", // "100%", //"windowSizeY+screenSizeY-windowTopLeftY",
+//         //         "y": "screenOriginY+0",
+//         //         "screen": w,
+//         //       }
+//         // )
+//   )
+// }
+
+function throwBottom(w) {
+  w.doOperation(
+        S.op(
+              "move", {
+                "width" : "windowSizeX",
+                x: "windowTopLeftX",
+                height: "screenSizeY-windowTopLeftY",
+                "y": "windowTopLeftY",
+              }
+        )
+  )
+}
+
+var hint = S.op("hint");
+
 var bindings = {
-  "right:ctrl": S.op("resize", { "width" : "+10%", "height" : "+0" }),
-   "left:ctrl": S.op("resize", { "width" : "-10%", "height" : "+0" }),
-  "right:ctrl,shift": function(w) { 
-    w.doOperation(
-      S.op(
-        "move", {
-          "width" : "windowSizeX-screenSizeX/10", 
-          height: "windowSizeY", 
-          "x": "windowTopLeftX+screenSizeX/10",
-          y: "windowTopLeftY"
-        }
-      )
-    )
-  },
-   "left:ctrl,shift": function(w) { 
-    w.doOperation(
-      S.op(
-        "move", {
-          "width" : "windowSizeX+screenSizeX/10", 
-          height: "windowSizeY", 
-          "x": "windowTopLeftX-screenSizeX/10",
-          y: "windowTopLeftY"
-        }
-      )
-    )
-  },
-   //"left:ctrl,shift": S.op("move", { "width" : "+10%", "x": "-10%", "height" : "+0%" }),
+  "right:ctrl":  widenRight,
+   "left:ctrl": narrowRight,
+  "right:ctrl,shift": narrowLeft,
+   "left:ctrl,shift":  widenLeft,
+  "1:f4,ctrl,alt": hint,
+  "l:alt": hint,
+   "left:a,alt:toggle": widenLeft,
+  "right:a,alt:toggle": narrowLeft,
+  "up:a,alt:toggle": pullBottom,
+  "down:a,alt:toggle": pushBottom,
+  "u:a,alt:toggle": pushTop,
+  "i:a,alt:toggle": pullTop,
+  "j:a,alt:toggle": pushBottom,
+  "k:a,alt:toggle": pullBottom,
+  "y:a,alt:toggle": throwTop,
+  // "y:a,alt:toggle": hint,
+  "h:a,alt:toggle": throwBottom,
+  // "left:a,alt:toggle": widenLeft,
+  // "right:a,alt:toggle": narrowLeft,
+  //"left:ctrl,shift": S.op("move", { "width" : "+10%", "x": "-10%", "height" : "+0%" }),
   // "right:ctrl": S.op("resize", { "width" : "windowSizeX+screenSizeX/10", "height" : "+0" }),
   //  "left:ctrl": S.op("resize", { "width" : "windowSizeX-screenSizeX/10", "height" : "+0" }),
   // "right:ctrl,shift": S.op("resize", { "width" : "windowSizeX-screenSizeX/10", "height" : "+0%", "anchor": "bottom-right" }),
   //  "left:ctrl,shift": S.op("resize", { "width" : "windowSizeX+screenSizeX/10", "height" : "+0%", "anchor": "bottom-right" }),
-  "h:alt": S.op("hint"),
+  "h:alt": narrowRight,
   "0:alt": grid(),
-  "d:alt,shift": S.op("relaunch")
-  ,"d:alt": function() { S.source("/Users/ryan/.slate.js"); }
+  "d:alt,shift": S.op("relaunch"),
+  "d:alt": function() { S.source("/Users/ryan/.slate.js"); },
 };
 
 // Alt-d: reload this Slate config.
@@ -139,7 +243,7 @@ function two(name, l, r) {
     "Signal": r.grid(),
   });
 }
-var home2Monitors = two("home-2monitors", dell, laptop);
+var home2Monitors = two("home-2monitors", §laptop, dell);
 var office2Monitors = two("office-2monitors", wd, laptop);
 
 S.default([ laptop.id, dell.id ], home2Monitors);

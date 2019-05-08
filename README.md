@@ -2,7 +2,7 @@
 
 My config files for the [Slate window manager](https://github.com/jigish/slate)
 
-Currently focused on aligning windows to a 10x10 grid (a la [Divvy](http://mizage.com/divvy/)), with capability to manipulate many windows with one hotkey / when display(s) configuration changes.
+Currently focused on aligning windows to a 10x10 grid (a la [Divvy](http://mizage.com/divvy/)), with capability to manipulate many windows with one hotkey / when the available displays change.
 
 ## Installing
 
@@ -10,7 +10,7 @@ First, [install Slate](https://github.com/jigish/slate#installing-slate) (includ
 
 Then, rather than write your own `.slate{,.js}`, simply run this repo's `install.sh` script.
 
-    $ .../slate-files/install.sh
+    $ ./install.sh
 
 This will create a `.slate.js` file in your home directory (`$HOME`) that will `Slate.source` the `.js` files from this repository.
 
